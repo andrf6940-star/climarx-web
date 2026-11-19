@@ -1,0 +1,8 @@
+{
+  "name": "CLIMARX Suite Técnica",
+  "short_name": "CLIMARX",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a"
+}
