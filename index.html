@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIMARX Suite Técnica - Diagnóstico HVAC/R, Auditoría ROI & ESG</title>
+ <meta name="google-site-verification" content="KIas9gUtCHG616LQ6tVeVUCFMbiT2LeHfzvF6_X9gTo" />  
+
+ <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#070a12',
+                            card: '#0d1322',
+                            border: '#1a243b',
+                            cyan: '#00f2fe',
+                            emerald: '#00e676',
+                            purple: '#7928ca',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #070a12;
+            color: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 230, 118, 0.04) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(13, 19, 34, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(30, 41, 59, 0.8);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-panel-glow {
+            background: rgba(13, 19, 34, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.1);
+        }
+
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .glow-green {
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070a12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2fe;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .glass-panel, .glass-panel-glow {
+                background: white !important;
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- TOP HEADER / BRAND BAR -->
+    <header class="no-print sticky top-0 z-50 glass-panel border-b border-slate-800/80 px-4 lg:px-8 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Brand Logo & Badge -->
+            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-400 p-0.5 shadow-lg shadow-cyan-500/20">
+                        <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                            <i class="fa-solid fa-snowflake text-cyan-400 text-xl animate-pulse"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-extrabold text-xl tracking-tight text-white">CLIMARX</h1>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800/50">SUITE TÉCNICA v3.5</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Termodinámica Aplicada & Monetización B2B</p>
+                    </div>
+                </div>
+
+                <!-- Status Indicator (Mobile view right aligned) -->
+                <div class="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800 text-xs md:hidden">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span class="text-emerald-400 font-mono font-medium">SISTEMA ACTIVO</span>
+                </div>
+            </div>
+
+            <!-- Global Status & Quick Unit Selectors -->
+            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                <!-- Status Badge Desktop -->
+                <div class="hidden md:flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800 text-xs">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-slate-300">Estado:</span>
+                    <span class="text-emerald-400 font-mono font-semibold">INDUSTRIAL HVAC/R ONLINE</span>
+                </div>
+
+                <!-- Units Selector Toggle -->
+                <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 text-xs font-mono">
+                    <button id="unit-bar" onclick="setUnitSystem('metric')" class="px-2.5 py-1 rounded-md text-cyan-400 bg-slate-800 font-bold transition">bar / °C</button>
+                    <button id="unit-psi" onclick="setUnitSystem('imperial')" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition">PSI / °F</button>
+                </div>
+
+                <!-- B2B Pro Badge -->
+                <div class="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                    <i class="fa-solid fa-crown text-amber-400"></i>
+                    <span>LICENCIA B2B PRO</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="no-print max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4">
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-800 scrollbar-none">
+            <button onclick="switchTab('calc-tab')" id="tab-btn-calc-tab" class="tab-btn active px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 whitespace-nowrap bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 transition">
+                <i class="fa-solid fa-calculator text-cyan-400"></i>
+                <span>Cálculo SH / SC Vivo</span>
+            </button>
+
+            <button onclick="switchTab('diag-tab')" id="tab-btn-diag-tab" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-900 hover:text-slate-200 border border-transparent transition">
+                <i class="fa-solid fa-microchip text-slate-400"></i>
+                <span>Matriz de Diagnóstico Avanzado</span>
+                <span id="diag-alert-badge" class="hidden w-2 h-2 rounded-full bg-rose-500"></span>
+            </button>
+
+            <!-- PESTAÑA: CÁMARA E INSPECCIÓN IA -->
+            <button onclick="switchTab('vision-tab')" id="tab-btn-vision-tab" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-900 hover:text-slate-200 border border-transparent transition">
+                <i class="fa-solid fa-camera text-cyan-400"></i>
+                <span>Inspección Foto IA</span>
+            </button>
+
+            <!-- NUEVA PESTAÑA: AUDITORÍA ROI & ESG -->
+            <button onclick="switchTab('roi-esg-tab')" id="tab-btn-roi-esg-tab" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-900 hover:text-slate-200 border border-transparent transition">
+                <i class="fa-solid fa-chart-line text-emerald-400"></i>
+                <span>Auditoría ROI & ESG</span>
+            </button>
+
+            <button onclick="switchTab('lib-tab')" id="tab-btn-lib-tab" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-900 hover:text-slate-200 border border-transparent transition">
+                <i class="fa-solid fa-book-bookmark text-slate-400"></i>
+                <span>Biblioteca PT & Tuberías</span>
+            </button>
+
+            <button onclick="switchTab('report-tab')" id="tab-btn-report-tab" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-900 hover:text-slate-200 border border-transparent transition">
+                <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i>
+                <span>Informe Cliente / Monetización</span>
+            </button>
+
+            <button onclick="switchTab('eng-tab')" id="tab-btn-eng-tab" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 whitespace-nowrap text-slate-400 hover:bg-slate-900 hover:text-slate-200 border border-transparent transition">
+                <i class="fa-solid fa-compass-drafting text-cyan-400"></i>
+                <span>Ingeniería & Diseño</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto w-full px-4 lg:px-8 py-6 flex-grow">
+
+        <!-- ================= TAB 1: CALCULADORA SH / SC VIVO ================= -->
+        <div id="calc-tab" class="tab-content block space-y-6">
+            
+            <!-- Context Control Bar -->
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-800">
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
+                    <!-- Refrigerant Selector -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">REFRIGERANTE ACTIVO</label>
+                        <div class="relative">
+                            <select id="refrigerant-select" onchange="calculateThermodynamics()" class="bg-slate-900 border border-cyan-500/40 text-cyan-300 font-mono font-bold text-sm rounded-xl px-4 py-2.5 pr-8 appearance-none focus:outline-none focus:ring-2 focus:ring-cyan-500 w-full min-w-[200px]">
+                                <option value="R134a">R-134a (Acondicionamiento / Comercial)</option>
+                                <option value="R410A">R-410A (Inverter / Split Industrial)</option>
+                                <option value="R32">R-32 (Alta Eficiencia Eco)</option>
+                                <option value="R290">R-290 (Propano Hidrocarburo)</option>
+                                <option value="R744">R-744 (CO2 Transcrítico/Subcrítico)</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down absolute right-3 top-3.5 text-xs text-cyan-400 pointer-events-none"></i>
+                        </div>
+                    </div>
+
+                    <!-- Circuit Mode -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">LÍNEA BARRIDA</label>
+                        <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800">
+                            <button id="mode-sh" onclick="setMode('SH')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-cyan-400 bg-slate-800 transition">
+                                <i class="fa-solid fa-wind mr-1"></i> Aspiración (SH)
+                            </button>
+                            <button id="mode-sc" onclick="setMode('SC')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition">
+                                <i class="fa-solid fa-droplet mr-1"></i> Líquido (SC)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Presets Quick Input -->
+                <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                    <button onclick="loadSamplePreset('normal')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl transition border border-slate-700">
+                        <i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> Carga Normal
+                    </button>
+                    <button onclick="loadSamplePreset('low_charge')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl transition border border-slate-700">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i> Fuga / Carga Baja
+                    </button>
+                    <button onclick="loadSamplePreset('overcharge')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl transition border border-slate-700">
+                        <i class="fa-solid fa-gauge-high text-rose-400 mr-1"></i> Sobre-carga
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Input & Dynamic Glass Cards Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Inputs Controls Panel (4 Cols) -->
+                <div class="lg:col-span-5 glass-panel p-6 rounded-2xl space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-cyan-400"></i>
+                            <span>Parámetros de Lectura Real</span>
+                        </h2>
+                        <span class="text-xs text-slate-400 font-mono">Manómetros de Campo</span>
+                    </div>
+
+                    <!-- Pressure Input -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-xs">
+                            <label class="text-slate-300 font-medium">PRESIÓN MANOMÉTRICA (<span class="unit-press-label text-cyan-400">bar</span>)</label>
+                            <span id="press-calc-hint" class="font-mono text-slate-400 text-[11px]">Saturación aproximada</span>
+                        </div>
+                        <div class="relative">
+                            <input type="number" step="0.1" id="input-pressure" value="6.5" oninput="calculateThermodynamics()" class="w-full bg-slate-950 border border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3 text-2xl font-mono font-bold text-white focus:outline-none transition">
+                            <span class="unit-press-label absolute right-4 top-4 font-mono text-slate-400 font-bold">bar</span>
+                        </div>
+                        <input type="range" id="slider-pressure" min="0.5" max="35" step="0.1" value="6.5" oninput="syncPressureSlider(this.value)" class="w-full accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                    </div>
+
+                    <!-- Temperature Input -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-xs">
+                            <label class="text-slate-300 font-medium">TEMPERATURA REAL TUBERÍA (<span class="unit-temp-label text-cyan-400">°C</span>)</label>
+                            <span class="font-mono text-slate-400 text-[11px]">Sonda de Contacto NTC/K</span>
+                        </div>
+                        <div class="relative">
+                            <input type="number" step="0.1" id="input-temperature" value="28.9" oninput="calculateThermodynamics()" class="w-full bg-slate-950 border border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3 text-2xl font-mono font-bold text-white focus:outline-none transition">
+                            <span class="unit-temp-label absolute right-4 top-4 font-mono text-slate-400 font-bold">°C</span>
+                        </div>
+                        <input type="range" id="slider-temperature" min="-20" max="80" step="0.5" value="28.9" oninput="syncTempSlider(this.value)" class="w-full accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                    </div>
+
+                    <!-- Ambient / External Temp Optional -->
+                    <div class="pt-2 border-t border-slate-800/80 space-y-2">
+                        <label class="block text-xs font-medium text-slate-400">TEMPERATURA AMBIENTE / REFRIGERACIÓN (°C)</label>
+                        <input type="number" id="input-ambient-temp" value="25.0" oninput="calculateThermodynamics()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm font-mono text-slate-300 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Outputs Display Panel (7 Cols) -->
+                <div class="lg:col-span-7 space-y-6">
+                    
+                    <!-- Main Result Cards Row -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        
+                        <!-- Saturation Temp Card -->
+                        <div class="glass-panel p-5 rounded-2xl relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-2xl"></div>
+                            <span class="text-xs font-semibold text-slate-400 tracking-wider">TEMP. SATURACIÓN (T_sat)</span>
+                            <div class="mt-2 flex items-baseline gap-2">
+                                <span id="out-tsat" class="text-4xl font-mono font-extrabold text-cyan-400">12.4</span>
+                                <span class="unit-temp-label text-slate-400 font-mono text-lg">°C</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-2 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-info text-cyan-400/80"></i>
+                                <span>Punto de cambio de fase según tabla P-T</span>
+                            </p>
+                        </div>
+
+                        <!-- SH / SC Result Card -->
+                        <div id="card-delta-result" class="glass-panel-glow p-5 rounded-2xl relative overflow-hidden transition-all duration-300">
+                            <div class="flex items-center justify-between">
+                                <span id="out-delta-title" class="text-xs font-extrabold text-emerald-400 tracking-wider">SOBRECALENTAMIENTO (SH)</span>
+                                <span id="out-delta-status-tag" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">ÓPTIMO</span>
+                            </div>
+                            <div class="mt-2 flex items-baseline gap-2">
+                                <span id="out-delta-val" class="text-4xl font-mono font-extrabold text-white">16.5</span>
+                                <span class="text-slate-400 font-mono text-lg">K (°C)</span>
+                            </div>
+
+                            <!-- Visual Gauge Bar -->
+                            <div class="mt-3 space-y-1">
+                                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                                    <div id="gauge-bar" class="bg-emerald-400 h-full rounded-full transition-all duration-500" style="width: 60%;"></div>
+                                </div>
+                                <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                                    <span>Bajo (&lt; 5K)</span>
+                                    <span>Rango Ideal (5 - 8K)</span>
+                                    <span>Alto (&gt; 12K)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Diagnostic Summary Banner -->
+                    <div class="glass-panel p-5 rounded-2xl space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                                <span>Diagnóstico Automático Preliminar</span>
+                            </h3>
+                            <span class="text-xs text-slate-400">Motor de Reglas Climarx</span>
+                        </div>
+                        
+                        <div id="diag-summary-box" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                            <p id="diag-summary-text" class="text-sm text-slate-200 font-medium">
+                                El sobrecalentamiento actual de <strong class="text-amber-400">16.5 K</strong> es excesivo. Indica evaporador con falta de líquido refrigerante.
+                            </p>
+                            <div id="diag-summary-causes" class="text-xs text-slate-400 space-y-1">
+                                <p><strong class="text-slate-300">Causas probables:</strong> Posible fuga de refrigerante, carga insuficiente o restricción en VET.</p>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-wrap gap-3 pt-2">
+                            <button onclick="transferToDiagnostics()" class="flex-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition glow-cyan">
+                                <i class="fa-solid fa-arrow-right-to-city"></i>
+                                <span>Transferir a Matriz Avanzada</span>
+                            </button>
+                            <button onclick="quickAddReport()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-plus text-emerald-400"></i>
+                                <span>Añadir a Informe Actual</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: MATRIZ DE DIAGNÓSTICO AVANZADO ================= -->
+        <div id="diag-tab" class="tab-content hidden space-y-6">
+            
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sitemap text-cyan-400"></i>
+                            <span>Matriz de Diagnóstico Cruzado de Averías HVAC/R</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Selecciona o confirma las anomalías detectadas para cruzar causas raíz y acciones de taller.</p>
+                    </div>
+
+                    <button onclick="resetDiagnosticMatrix()" class="text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 px-3 py-2 rounded-xl transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Reiniciar Selección
+                    </button>
+                </div>
+
+                <!-- Matrix Checkboxes Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                    
+                    <!-- Anomaly 1 -->
+                    <label class="glass-panel p-4 rounded-xl border border-slate-800 hover:border-cyan-500/50 cursor-pointer flex items-start gap-3 transition">
+                        <input type="checkbox" id="chk-low-press" onchange="evaluateDiagnosticMatrix()" class="mt-1 w-4 h-4 accent-cyan-400 rounded">
+                        <div>
+                            <span class="text-sm font-semibold text-slate-200 block">Presión de Baja Muy Inferior</span>
+                            <span class="text-xs text-slate-400">P_evap por debajo de consigna estándar.</span>
+                        </div>
+                    </label>
+
+                    <!-- Anomaly 2 -->
+                    <label class="glass-panel p-4 rounded-xl border border-slate-800 hover:border-cyan-500/50 cursor-pointer flex items-start gap-3 transition">
+                        <input type="checkbox" id="chk-high-press" onchange="evaluateDiagnosticMatrix()" class="mt-1 w-4 h-4 accent-cyan-400 rounded">
+                        <div>
+                            <span class="text-sm font-semibold text-slate-200 block">Presión de Alta Elevada</span>
+                            <span class="text-xs text-slate-400">P_cond por encima de rangos normales.</span>
+                        </div>
+                    </label>
+
+                    <!-- Anomaly 3 -->
+                    <label class="glass-panel p-4 rounded-xl border border-slate-800 hover:border-cyan-500/50 cursor-pointer flex items-start gap-3 transition">
+                        <input type="checkbox" id="chk-high-sh" onchange="evaluateDiagnosticMatrix()" class="mt-1 w-4 h-4 accent-cyan-400 rounded">
+                        <div>
+                            <span class="text-sm font-semibold text-slate-200 block">Sobrecalentamiento Alto (&gt;12K)</span>
+                            <span class="text-xs text-slate-400">Vapor sobrecalentado antes del compresor.</span>
+                        </div>
+                    </label>
+
+                    <!-- Anomaly 4 -->
+                    <label class="glass-panel p-4 rounded-xl border border-slate-800 hover:border-cyan-500/50 cursor-pointer flex items-start gap-3 transition">
+                        <input type="checkbox" id="chk-low-sh" onchange="evaluateDiagnosticMatrix()" class="mt-1 w-4 h-4 accent-cyan-400 rounded">
+                        <div>
+                            <span class="text-sm font-semibold text-slate-200 block">Sobrecalentamiento Bajo (&lt;4K)</span>
+                            <span class="text-xs text-slate-400">Riesgo de retorno de líquido al compresor.</span>
+                        </div>
+                    </label>
+
+                    <!-- Anomaly 5 -->
+                    <label class="glass-panel p-4 rounded-xl border border-slate-800 hover:border-cyan-500/50 cursor-pointer flex items-start gap-3 transition">
+                        <input type="checkbox" id="chk-low-sc" onchange="evaluateDiagnosticMatrix()" class="mt-1 w-4 h-4 accent-cyan-400 rounded">
+                        <div>
+                            <span class="text-sm font-semibold text-slate-200 block">Subenfriamiento Bajo (&lt;3K)</span>
+                            <span class="text-xs text-slate-400">Burbujeo de gas en línea de líquido / visor.</span>
+                        </div>
+                    </label>
+
+                    <!-- Anomaly 6 -->
+                    <label class="glass-panel p-4 rounded-xl border border-slate-800 hover:border-cyan-500/50 cursor-pointer flex items-start gap-3 transition">
+                        <input type="checkbox" id="chk-high-sc" onchange="evaluateDiagnosticMatrix()" class="mt-1 w-4 h-4 accent-cyan-400 rounded">
+                        <div>
+                            <span class="text-sm font-semibold text-slate-200 block">Subenfriamiento Elevado (&gt;10K)</span>
+                            <span class="text-xs text-slate-400">Acumulación excesiva de líquido en condensador.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Diagnostic Results Output Card -->
+            <div id="diag-matrix-results" class="glass-panel-glow p-6 rounded-2xl space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white">Dictamen Técnico Completo</h3>
+                            <p class="text-xs text-slate-400">Causas raíz identificadas por algoritmo termodinámico</p>
+                        </div>
+                    </div>
+                    <span id="diag-severity-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">
+                        ANÁLISIS REQUERIDO
+                    </span>
+                </div>
+
+                <!-- Cause and Solution Breakdown -->
+                <div id="diag-breakdown-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Diagnostic Content Populated via JS -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs font-bold text-slate-400 tracking-wider">CAUSAS RAÍZ PROBABLES</h4>
+                        <ul id="diag-causes-list" class="space-y-2 text-sm text-slate-200 font-medium">
+                            <li class="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                                <i class="fa-solid fa-circle-dot text-cyan-400 mt-1"></i>
+                                <span>Selecciona parámetros o marca anomalias en las casillas superiores para obtener el dictamen.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h4 class="text-xs font-bold text-slate-400 tracking-wider">ACCIONES CORRECTORAS EN TALLER</h4>
+                        <ul id="diag-actions-list" class="space-y-2 text-sm text-slate-200 font-medium">
+                            <li class="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                                <i class="fa-solid fa-wrench text-emerald-400 mt-1"></i>
+                                <span>Las recomendaciones de intervención aparecerán de forma automática.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- B2B Cost Impact Estimate -->
+                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-bolt text-amber-400 text-2xl"></i>
+                        <div>
+                            <span class="text-xs text-slate-400 font-mono">IMPACTO EN CONSUMO Y EFICIENCIA</span>
+                            <p id="diag-energy-impact" class="text-sm font-bold text-slate-200">Sobrecosto estimado en factura eléctrica: +15% a +35% debido a baja eficiencia energética (COP reducida).</p>
+                        </div>
+                    </div>
+                    <button onclick="saveDiagToReport()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs whitespace-nowrap transition">
+                        <i class="fa-solid fa-file-export mr-1"></i> Guardar en Informe
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= TAB: INSPECCIÓN FOTO IA ================= -->
+        <div id="vision-tab" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-camera-retro text-cyan-400"></i>
+                            <span>Inspección Visual y Diagnóstico por Foto (IA)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Saca una foto en directo con la cámara o sube una imagen del equipo (batería, compresor, bornes, manómetros, código de error) para detectar el fallo.</p>
+                    </div>
+                    <span class="text-xs font-mono px-3 py-1.5 rounded-full bg-cyan-950/80 text-cyan-400 border border-cyan-800/60">
+                        <i class="fa-solid fa-eye mr-1"></i> VISIÓN ARTIFICIAL HVAC/R
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    <!-- Captura de Cámara / Subida de Foto (5 Cols) -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="glass-panel p-5 rounded-2xl border border-dashed border-slate-700 hover:border-cyan-400 transition text-center space-y-4">
+                            <input type="file" id="vision-file-input" accept="image/*" capture="environment" class="hidden" onchange="handleVisionImage(event)">
+                            
+                            <div id="vision-placeholder" class="py-6 space-y-3 cursor-pointer" onclick="document.getElementById('vision-file-input').click()">
+                                <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto text-2xl">
+                                    <i class="fa-solid fa-camera"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-white">Sacar Foto o Subir Imagen</p>
+                                    <p class="text-xs text-slate-400 mt-1">Abre la cámara trasera en móvil/tablet o selecciona foto en PC</p>
+                                </div>
+                            </div>
+
+                            <div id="vision-preview-wrapper" class="hidden space-y-3">
+                                <img id="vision-preview-img" src="" alt="Captura del componente" class="w-full max-h-64 object-contain rounded-xl border border-slate-700 bg-slate-950 mx-auto">
+                                <button onclick="document.getElementById('vision-file-input').click()" class="text-xs text-cyan-400 hover:text-cyan-300 underline">
+                                    <i class="fa-solid fa-rotate mr-1"></i> Cambiar o repetir foto
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 pt-2">
+                                <button onclick="document.getElementById('vision-file-input').click()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
+                                    <i class="fa-solid fa-camera text-cyan-400"></i>
+                                    <span>Cámara / Archivo</span>
+                                </button>
+                                <button onclick="openLiveWebcam()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
+                                    <i class="fa-solid fa-video text-emerald-400"></i>
+                                    <span>Webcam Directa</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Webcam Live Container -->
+                        <div id="webcam-live-box" class="hidden glass-panel p-4 rounded-2xl border border-cyan-500/40 space-y-3">
+                            <video id="webcam-video" autoplay playsinline class="w-full rounded-xl bg-black max-h-56 object-cover"></video>
+                            <canvas id="webcam-canvas" class="hidden"></canvas>
+                            <div class="flex gap-2">
+                                <button onclick="captureFromWebcam()" class="flex-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition">
+                                    <i class="fa-solid fa-camera mr-1"></i> Capturar Foto Ahora
+                                </button>
+                                <button onclick="stopLiveWebcam()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-xl text-xs transition">
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Selector de Componente Inspeccionado -->
+                        <div class="glass-panel p-4 rounded-2xl space-y-3">
+                            <label class="block text-xs font-semibold text-slate-300">ZONA O COMPONENTE FOTOGRAFIADO</label>
+                            <select id="vision-component-type" class="w-full bg-slate-950 border border-slate-700 text-xs font-mono text-cyan-300 rounded-xl px-3 py-2.5 focus:outline-none focus:border-cyan-400">
+                                <option value="evaporator">Batería Evaporadora (Escarcha / Hielo / Suciedad)</option>
+                                <option value="condenser">Batería Condensadora (Obstrucción / Aletas)</option>
+                                <option value="compressor">Compresor y Bornes Eléctricos (Recalentamiento / Aceite)</option>
+                                <option value="piping">Tuberías, Soldaduras y Válvula Expansión (Fugas / Aceite)</option>
+                                <option value="display">Display / Placa Electrónica (Código de Error)</option>
+                            </select>
+
+                            <button id="vision-analyze-btn" onclick="runVisionAIDiagnosis()" disabled class="w-full bg-cyan-500 hover:bg-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 transition glow-cyan">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Analizar Foto y Detectar Fallo con IA</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Resultado del Análisis IA (7 Cols) -->
+                    <div class="lg:col-span-7 glass-panel-glow p-6 rounded-2xl space-y-5">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-robot text-cyan-400 text-lg"></i>
+                                <div>
+                                    <h3 class="text-base font-bold text-white">Dictamen Visual por Inteligencia Artificial</h3>
+                                    <p class="text-xs text-slate-400">Detección de anomalías físicas, térmicas y eléctricas</p>
+                                </div>
+                            </div>
+                            <span id="vision-status-badge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                                ESPERANDO FOTO
+                            </span>
+                        </div>
+
+                        <div id="vision-result-box" class="bg-slate-900/90 p-5 rounded-xl border border-slate-800 space-y-4 min-h-[230px]">
+                            <p id="vision-diagnosis-headline" class="text-sm font-bold text-slate-200">
+                                Saca una foto o selecciona una imagen para iniciar el escaneo técnico.
+                            </p>
+                            <div id="vision-diagnosis-details" class="text-xs text-slate-400 space-y-2 leading-relaxed">
+                                <p>• El sistema analizará acumulación anormal de escarcha, manchas de aceite refrigerante en uniones, obstrucción por suciedad en intercambiadores o fogonazos en bornes eléctricos.</p>
+                                <p>• Una vez analizada, podrás incorporar la evidencia fotográfica directamente en el Informe B2B del cliente.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-3 pt-1">
+                            <button onclick="attachVisionToReport()" id="vision-attach-btn" disabled class="flex-1 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-file-circle-plus"></i>
+                                <span>Adjuntar Foto y Diagnóstico al Informe B2B</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= NUEVA PESTAÑA: AUDITORÍA ROI & ESG ================= -->
+        <div id="roi-esg-tab" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-emerald-400"></i>
+                            <span>Auditoría de Retorno de Inversión (ROI) & Sostenibilidad ESG</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Cuantifica el ahorro económico en factura eléctrica y la reducción de huella de carbono por optimización o sustitución de equipos.</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                        MÓDULO B2B FINANCIERO & AMBIENTAL
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Parámetros de Entrada (5 Cols) -->
+                    <div class="lg:col-span-5 glass-panel p-5 rounded-2xl space-y-4">
+                        <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Parámetros Operativos & Costes</h3>
+                        
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Potencia Eléctrica Absorbida Actual (kW)</label>
+                                <input type="number" step="1" id="esg-power-kw" value="45" oninput="calculateRoiEsg()" class="w-full bg-slate-950 border border-slate-700 text-white font-mono rounded-lg p-2.5 focus:border-emerald-400 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-slate-400 mb-1">Horas de Funcionamiento Anuales (h/año)</label>
+                                <input type="number" step="100" id="esg-hours-year" value="4500" oninput="calculateRoiEsg()" class="w-full bg-slate-950 border border-slate-700 text-white font-mono rounded-lg p-2.5 focus:border-emerald-400 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-slate-400 mb-1">Coste del kWh Eléctrico (€/kWh)</label>
+                                <input type="number" step="0.01" id="esg-kwh-cost" value="0.18" oninput="calculateRoiEsg()" class="w-full bg-slate-950 border border-slate-700 text-white font-mono rounded-lg p-2.5 focus:border-emerald-400 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-slate-400 mb-1">Mejora de Eficiencia Estimada / Reparación (%)</label>
+                                <input type="number" step="1" id="esg-efficiency-gain" value="20" oninput="calculateRoiEsg()" class="w-full bg-slate-950 border border-slate-700 text-white font-mono rounded-lg p-2.5 focus:border-emerald-400 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-slate-400 mb-1">Coste de Inversión / Intervención Técnica (€)</label>
+                                <input type="number" step="100" id="esg-investment-cost" value="3500" oninput="calculateRoiEsg()" class="w-full bg-slate-950 border border-slate-700 text-white font-mono rounded-lg p-2.5 focus:border-emerald-400 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-slate-400 mb-1">Factor de Emisión de CO₂ (kg CO₂ / kWh)</label>
+                                <input type="number" step="0.01" id="esg-co2-factor" value="0.25" oninput="calculateRoiEsg()" class="w-full bg-slate-950 border border-slate-700 text-white font-mono rounded-lg p-2.5 focus:border-emerald-400 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resultados de Auditoría ROI & ESG (7 Cols) -->
+                    <div class="lg:col-span-7 glass-panel-glow p-6 rounded-2xl space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-calculator text-emerald-400"></i>
+                                <span>Resultados Financieros y Sostenibilidad ESG</span>
+                            </h3>
+                            <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                                AUDITORÍA VALIDADA
+                            </span>
+                        </div>
+
+                        <!-- Tarjetas de Métricas Clave -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                                <span class="text-xs text-slate-400 uppercase tracking-wider">Ahorro Económico Anual</span>
+                                <p id="out-esg-savings" class="text-3xl font-mono font-extrabold text-emerald-400 mt-1">€ 7,290</p>
+                                <p class="text-[11px] text-slate-500 mt-1">Reducción directa en factura eléctrica</p>
+                            </div>
+
+                            <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                                <span class="text-xs text-slate-400 uppercase tracking-wider">Periodo de Retorno (Payback)</span>
+                                <p id="out-esg-payback" class="text-3xl font-mono font-extrabold text-cyan-400 mt-1">5.8 Meses</p>
+                                <p class="text-[11px] text-slate-500 mt-1">Amortización total de la inversión</p>
+                            </div>
+
+                            <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                                <span class="text-xs text-slate-400 uppercase tracking-wider">Reducción Huella CO₂ (ESG)</span>
+                                <p id="out-esg-co2" class="text-3xl font-mono font-extrabold text-emerald-400 mt-1">10.13 Ton</p>
+                                <p class="text-[11px] text-slate-500 mt-1">Toneladas de CO₂ evitadas al año</p>
+                            </div>
+
+                            <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                                <span class="text-xs text-slate-400 uppercase tracking-wider">ROI a 5 Años</span>
+                                <p id="out-esg-roi" class="text-3xl font-mono font-extrabold text-amber-400 mt-1">941%</p>
+                                <p class="text-[11px] text-slate-500 mt-1">Rentabilidad acumulada de la intervención</p>
+                            </div>
+                        </div>
+
+                        <!-- Resumen ejecutivo para el cliente -->
+                        <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-800 space-y-2">
+                            <h4 class="text-xs font-bold text-slate-300 uppercase">Resumen Ejecutivo para Presentación B2B</h4>
+                            <p id="out-esg-summary-text" class="text-xs text-slate-300 leading-relaxed">
+                                La intervención propuesta presenta un retorno excepcional con un plazo de amortización inferior a 6 meses. Además, aporta un cumplimiento ESG directo alineado con la directiva de reducción de emisiones corporativas.
+                            </p>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <button onclick="transferRoiToReport()" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 transition glow-green">
+                                <i class="fa-solid fa-file-arrow-down"></i>
+                                <span>Incluir Auditoría ROI & ESG en el Informe B2B</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: BIBLIOTECA PT & TUBERÍAS ================= -->
+        <div id="lib-tab" class="tab-content hidden space-y-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- PT Reference Table Panel (7 Cols) -->
+                <div class="lg:col-span-7 glass-panel p-6 rounded-2xl space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                        <div>
+                            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-table text-cyan-400"></i>
+                                <span>Tabla Sombra Presión-Temperatura (PT)</span>
+                            </h3>
+                            <p class="text-xs text-slate-400">Saturación para refrigerantes seleccionados</p>
+                        </div>
+                        <input type="text" id="pt-search" onkeyup="filterPTTable()" placeholder="Buscar Temp o Presión..." class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-cyan-400">
+                    </div>
+
+                    <!-- Scrollable Table -->
+                    <div class="overflow-x-auto max-h-[420px] overflow-y-auto border border-slate-800 rounded-xl">
+                        <table class="w-full text-left font-mono text-xs">
+                            <thead class="bg-slate-900 text-cyan-400 sticky top-0 border-b border-slate-800">
+                                <tr>
+                                    <th class="p-3">Temp (°C)</th>
+                                    <th class="p-3">R-134a (bar)</th>
+                                    <th class="p-3">R-410A (bar)</th>
+                                    <th class="p-3">R-32 (bar)</th>
+                                    <th class="p-3">R-290 (bar)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pt-table-body" class="divide-y divide-slate-800/60 text-slate-300">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pipe Sizing Calculator (5 Cols) -->
+                <div class="lg:col-span-5 glass-panel p-6 rounded-2xl space-y-5">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-ruler-combined text-emerald-400"></i>
+                            <span>Estimador de Diámetro de Tuberías</span>
+                        </h3>
+                        <p class="text-xs text-slate-400">Guía rápida de caída de presión y velocidad de aceite</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Capacidad Frigorífica Estimada (kW)</label>
+                            <input type="number" id="pipe-kw" value="7.5" oninput="calcPipeSizing()" class="w-full bg-slate-950 border border-slate-700 text-sm font-mono text-white rounded-xl px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Línea de Circuito</label>
+                            <select id="pipe-line-type" onchange="calcPipeSizing()" class="w-full bg-slate-950 border border-slate-700 text-sm font-mono text-cyan-300 rounded-xl px-3 py-2">
+                                <option value="suction">Aspiración (Gas Frío - Caída Máx 0.15 bar)</option>
+                                <option value="liquid">Líquido (Líquido Subenfriado - Vel 0.5-1.2 m/s)</option>
+                                <option value="discharge">Descarga (Gas Caliente - Alta P)</option>
+                            </select>
+                        </div>
+
+                        <!-- Results Box -->
+                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2 mt-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-slate-400">Diámetro Cobre Sugerido:</span>
+                                <span id="out-pipe-size" class="text-lg font-mono font-bold text-cyan-400">5/8" (15.87 mm)</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-400">Velocidad del Gas:</span>
+                                <span id="out-pipe-vel" class="font-mono text-slate-200">8.2 m/s (Retorno Aceite Correcto)</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-400">Caída de Presión Est. / 10m:</span>
+                                <span id="out-pipe-dp" class="font-mono text-emerald-400">0.11 bar (Aceptable)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= TAB 4: GENERADOR DE INFORME TÉCNICO B2B ================= -->
+        <div id="report-tab" class="tab-content hidden space-y-6">
+            
+            <!-- Controls Bar (No Print) -->
+            <div class="no-print glass-panel p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-base font-bold text-white">Generador de Informe Técnico de Diagnóstico</h2>
+                    <p class="text-xs text-slate-400">Genera una hoja oficial lista para entregar al cliente o guardar en PDF.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="window.print()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition glow-green">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Imprimir / Exportar PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form & Preview Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Report Input Form (4 Cols - No Print) -->
+                <div class="no-print lg:col-span-4 glass-panel p-5 rounded-2xl space-y-4">
+                    <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Datos del Servicio / Cliente</h3>
+                    
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Cliente / Empresa</label>
+                            <input type="text" id="rep-client" value="Climática Industrial S.L." oninput="updateReportPreview()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2.5">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 mb-1">Ubicación / Taller</label>
+                            <input type="text" id="rep-location" value="Planta 2 - Nave Frigorífica B" oninput="updateReportPreview()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2.5">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 mb-1">Técnico Certificado</label>
+                            <input type="text" id="rep-tech" value="Ing. M. Rodríguez (CARNET HVAC-092)" oninput="updateReportPreview()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2.5">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 mb-1">Modelo / Nº Serie Equipo</label>
+                            <input type="text" id="rep-equip" value="Carrier Chill-Pro 30XA / SN-883920" oninput="updateReportPreview()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2.5">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 mb-1">Observaciones Adicionales</label>
+                            <textarea id="rep-notes" rows="3" oninput="updateReportPreview()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2.5">Se realizó medición termodinámica completa en línea de aspiración. Se detectó anomalía de sobrecalentamiento elevado.</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Printable Report Sheet (8 Cols Desktop / Full Print) -->
+                <div class="lg:col-span-8 bg-white text-slate-900 p-8 rounded-2xl shadow-2xl border border-slate-200 space-y-6 font-sans text-sm min-h-[600px]">
+                    
+                    <!-- Report Header -->
+                    <div class="flex items-center justify-between border-b-2 border-slate-900 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-slate-900 text-cyan-400 rounded-xl flex items-center justify-center text-2xl font-black">
+                                CX
+                            </div>
+                            <div>
+                                <h1 class="text-xl font-extrabold tracking-tight text-slate-900">CLIMARX DIAGNOSTICS</h1>
+                                <p class="text-xs text-slate-600 font-medium">INFORME TÉCNICO OFICIAL DE INSPECCIÓN TERMODINÁMICA</p>
+                            </div>
+                        </div>
+                        <div class="text-right text-xs">
+                            <p class="font-bold text-slate-900">INFORME Nº: <span class="font-mono">CX-2026-9921</span></p>
+                            <p class="text-slate-500">Fecha: <span id="rep-out-date">12/11/2026</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Client & Equipment Grid -->
+                    <div class="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+                        <div>
+                            <p class="text-slate-500">CLIENTE:</p>
+                            <p id="rep-out-client" class="font-bold text-slate-900">Climática Industrial S.L.</p>
+                            <p class="text-slate-500 mt-2">UBICACIÓN:</p>
+                            <p id="rep-out-location" class="font-bold text-slate-900">Planta 2 - Nave Frigorífica B</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500">EQUIPO / SERIE:</p>
+                            <p id="rep-out-equip" class="font-bold text-slate-900">Carrier Chill-Pro 30XA / SN-883920</p>
+                            <p class="text-slate-500 mt-2">TÉCNICO INSPECTOR:</p>
+                            <p id="rep-out-tech" class="font-bold text-slate-900">Ing. M. Rodríguez (CARNET HVAC-092)</p>
+                        </div>
+                    </div>
+
+                    <!-- Readings Summary Table -->
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">1. LECTURAS Y PARÁMETROS TERMODINÁMICOS REGISTRADOS</h3>
+                        <table class="w-full text-xs text-left border-collapse border border-slate-300">
+                            <thead class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                                <tr>
+                                    <th class="p-2 border border-slate-300">Refrigerante</th>
+                                    <th class="p-2 border border-slate-300">Presión Lector</th>
+                                    <th class="p-2 border border-slate-300">Temp. Tubería</th>
+                                    <th class="p-2 border border-slate-300">Temp. Sat (T_sat)</th>
+                                    <th class="p-2 border border-slate-300">Valor SH / SC</th>
+                                    <th class="p-2 border border-slate-300">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rep-table-body">
+                                <tr>
+                                    <td id="rep-row-ref" class="p-2 border border-slate-300 font-mono font-bold">R-134a</td>
+                                    <td id="rep-row-press" class="p-2 border border-slate-300 font-mono">6.50 bar</td>
+                                    <td id="rep-row-temp" class="p-2 border border-slate-300 font-mono">28.9 °C</td>
+                                    <td id="rep-row-tsat" class="p-2 border border-slate-300 font-mono">12.4 °C</td>
+                                    <td id="rep-row-delta" class="p-2 border border-slate-300 font-mono font-bold text-amber-700">16.5 K (SH)</td>
+                                    <td id="rep-row-status" class="p-2 border border-slate-300 font-bold text-rose-600">ANÓMALO</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Diagnostic Conclusions -->
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">2. DICTAMEN TÉCNICO Y CAUSAS RAÍZ</h3>
+                        <div class="p-4 bg-amber-50 border-l-4 border-amber-500 rounded text-xs space-y-1">
+                            <p id="rep-out-diag-summary" class="font-bold text-amber-900">Elevado sobrecalentamiento en línea de aspiración.</p>
+                            <p id="rep-out-diag-details" class="text-amber-800">Causas evaluadas: Posible fuga de refrigerante en el circuito, carga deficiente o restricción en el elemento de expansión (VET).</p>
+                        </div>
+                    </div>
+
+                    <!-- Evidencia Fotográfica IA -->
+                    <div id="rep-vision-section" class="hidden space-y-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">3. EVIDENCIA FOTOGRÁFICA E INSPECCIÓN VISUAL IA</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-3 bg-slate-50 border border-slate-200 rounded-xl items-center text-xs">
+                            <img id="rep-vision-img" src="" alt="Evidencia fotográfica" class="w-full max-h-32 object-contain rounded border border-slate-300 bg-white">
+                            <div class="sm:col-span-2 space-y-1">
+                                <p id="rep-vision-title" class="font-bold text-slate-900"></p>
+                                <p id="rep-vision-desc" class="text-slate-700"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección Auditoría ROI & ESG (Se muestra al adjuntar) -->
+                    <div id="rep-roi-section" class="hidden space-y-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">4. AUDITORÍA DE RETORNO DE INVERSIÓN (ROI) & SOSTENIBILIDAD ESG</h3>
+                        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs space-y-2">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono">
+                                <div><span class="text-slate-500 block text-[10px]">AHORRO ANUAL</span><strong id="rep-roi-savings" class="text-emerald-800 text-sm">€ 7,290</strong></div>
+                                <div><span class="text-slate-500 block text-[10px]">PAYBACK</span><strong id="rep-roi-payback" class="text-cyan-800 text-sm">5.8 Meses</strong></div>
+                                <div><span class="text-slate-500 block text-[10px]">CO₂ EVITADO</span><strong id="rep-roi-co2" class="text-emerald-800 text-sm">10.13 Ton</strong></div>
+                                <div><span class="text-slate-500 block text-[10px]">ROI (5 AÑOS)</span><strong id="rep-roi-rate" class="text-amber-800 text-sm">941%</strong></div>
+                            </div>
+                            <p id="rep-roi-text" class="text-slate-700 pt-1 border-t border-emerald-200"></p>
+                        </div>
+                    </div>
+
+                    <!-- Notes and Signature -->
+                    <div class="grid grid-cols-2 gap-6 pt-4 border-t border-slate-200 text-xs">
+                        <div>
+                            <p class="font-bold text-slate-700 mb-1">OBSERVACIONES:</p>
+                            <p id="rep-out-notes" class="text-slate-600 italic">Se realizó medición termodinámica completa en línea de aspiración.</p>
+                        </div>
+                        <div class="text-center space-y-8">
+                            <p class="font-bold text-slate-700">FIRMA Y SELLO TÉCNICO AUTORIZADO</p>
+                            <div class="border-b border-slate-400 w-3/4 mx-auto"></div>
+                            <p class="text-[10px] text-slate-400">Verificado con CLIMARX Industrial Engine v3.5</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= TAB: INGENIERÍA & DISEÑO ================= -->
+        <div id="eng-tab" class="tab-content hidden space-y-6">
+            
+            <div class="glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-compass-drafting text-cyan-400"></i>
+                        <span>Suite de Ingeniería de Proyecto y Cálculo</span>
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Herramientas abiertas para dimensionamiento preliminar, memorias técnicas y auditoría de obra.</p>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 self-start md:self-auto">
+                    ACCESO ABIERTO LANZAMIENTO
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- 1. ESTIMADOR RÁPIDO DE CARGAS TÉRMICAS -->
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-5">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-temperature-arrow-down text-cyan-400"></i>
+                                <span>1. Cargas Térmicas (kW)</span>
+                            </h3>
+                            <span class="text-[10px] font-mono text-slate-400">ESTIMACIÓN</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-400 mb-1">VOLUMEN (m³)</label>
+                                <input type="number" id="eng-load-vol" value="120" oninput="calcEngLoads()" class="w-full bg-slate-950 border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2 text-sm font-mono font-bold text-white focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-400 mb-1">SALTO ΔT (K)</label>
+                                <input type="number" id="eng-load-dt" value="25" oninput="calcEngLoads()" class="w-full bg-slate-950 border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2 text-sm font-mono font-bold text-white focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-400 mb-1">APLICACIÓN / AISLAMIENTO</label>
+                            <select id="eng-load-type" onchange="calcEngLoads()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 text-xs font-mono rounded-xl px-3 py-2.5 focus:outline-none focus:border-cyan-400">
+                                <option value="32">Climatización Confort (Aislamiento Estándar)</option>
+                                <option value="45">Cámara Refrigeración Positiva (0°C a +5°C)</option>
+                                <option value="65">Cámara Congelación (-18°C a -25°C)</option>
+                                <option value="85">Túnel Enfriamiento / Alta Carga Interna</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-400 mb-1">CARGA PRODUCTO / EQUIPOS (kW)</label>
+                            <input type="number" step="0.5" id="eng-load-extra" value="2.5" oninput="calcEngLoads()" class="w-full bg-slate-950 border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2 text-sm font-mono font-bold text-white focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-cyan-500/30 space-y-2">
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-xs text-slate-400">Potencia Frigorífica Req.:</span>
+                            <span id="out-eng-kw" class="text-2xl font-mono font-extrabold text-cyan-400">12.10 kW</span>
+                        </div>
+                        <div class="flex justify-between text-xs font-mono text-slate-400 pt-1 border-t border-slate-800">
+                            <span>Frigorías/h: <strong id="out-eng-frig" class="text-slate-200">10,406</strong></span>
+                            <span>Caudal aire est.: <strong id="out-eng-air" class="text-slate-200">2,178 m³/h</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. HIDRÁULICA AVANZADA -->
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-5">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-water text-emerald-400"></i>
+                                <span>2. Hidráulica & Pérdida Carga</span>
+                            </h3>
+                            <span class="text-[10px] font-mono text-slate-400">DARCY-WEISBACH</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-400 mb-1">CAUDAL (m³/h)</label>
+                                <input type="number" step="0.1" id="eng-hyd-flow" value="4.5" oninput="calcEngHydraulics()" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3 py-2 text-sm font-mono font-bold text-white focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-400 mb-1">DIÁM. INT. (mm)</label>
+                                <input type="number" step="0.5" id="eng-hyd-diam" value="32" oninput="calcEngHydraulics()" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3 py-2 text-sm font-mono font-bold text-white focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-400 mb-1">FLUIDO / GLICOL</label>
+                                <select id="eng-hyd-fluid" onchange="calcEngHydraulics()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 text-xs font-mono rounded-xl px-2.5 py-2.5 focus:outline-none focus:border-emerald-400">
+                                    <option value="1.0">Agua Pura (100%)</option>
+                                    <option value="1.35">Propilenglicol 20%</option>
+                                    <option value="1.75">Propilenglicol 30%</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-400 mb-1">LONGITUD TRAMO (m)</label>
+                                <input type="number" id="eng-hyd-len" value="40" oninput="calcEngHydraulics()" class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-xl px-3 py-2 text-sm font-mono font-bold text-white focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-emerald-500/30 space-y-2">
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-xs text-slate-400">Velocidad Fluido:</span>
+                            <span id="out-hyd-vel" class="text-2xl font-mono font-extrabold text-emerald-400">1.55 m/s</span>
+                        </div>
+                        <div class="flex justify-between text-xs font-mono text-slate-400 pt-1 border-t border-slate-800">
+                            <span>Pérdida: <strong id="out-hyd-pam" class="text-slate-200">485 Pa/m</strong></span>
+                            <span>Total: <strong id="out-hyd-bar" class="text-amber-400">0.19 bar</strong></span>
+                        </div>
+                        <p id="out-hyd-status" class="text-[11px] text-emerald-400 font-medium pt-0.5">Velocidad dentro de rango óptimo (0.8 - 2.0 m/s).</p>
+                    </div>
+                </div>
+
+                <!-- 3. CALCULADORA PSICROMÉTRICA -->
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-5">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-cloud-rain text-purple-400"></i>
+                                <span>3. Psicrometría & Rocío</span>
+                            </h3>
+                            <span class="text-[10px] font-mono text-slate-400">AIRE HÚMEDO</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-400 mb-1">TEMP. SECA (°C)</label>
+                                <input type="number" step="0.5" id="eng-psy-temp" value="24" oninput="calcEngPsychrometrics()" class="w-full bg-slate-950 border border-slate-700 focus:border-purple-400 rounded-xl px-3 py-2 text-sm font-mono font-bold text-white focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-400 mb-1">HUMEDAD REL. (%)</label>
+                                <input type="number" min="5" max="100" id="eng-psy-rh" value="55" oninput="calcEngPsychrometrics()" class="w-full bg-slate-950 border border-slate-700 focus:border-purple-400 rounded-xl px-3 py-2 text-sm font-mono font-bold text-white focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-400 mb-1">ALTITUD INSTALACIÓN (m.s.n.m.)</label>
+                            <input type="number" step="50" id="eng-psy-alt" value="100" oninput="calcEngPsychrometrics()" class="w-full bg-slate-950 border border-slate-700 focus:border-purple-400 rounded-xl px-3 py-2 text-sm font-mono font-bold text-white focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-purple-500/30 space-y-2">
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-xs text-slate-400">Punto de Rocío:</span>
+                            <span id="out-psy-dew" class="text-2xl font-mono font-extrabold text-purple-400">14.4 °C</span>
+                        </div>
+                        <div class="flex justify-between text-xs font-mono text-slate-400 pt-1 border-t border-slate-800">
+                            <span>Hum. Abs.: <strong id="out-psy-abs" class="text-slate-200">10.3 g/kg</strong></span>
+                            <span>Entalpía: <strong id="out-psy-ent" class="text-slate-200">50.4 kJ/kg</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="no-print glass-panel border-t border-slate-800 py-4 px-6 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 gap-2">
+            <p>© 2026 CLIMARX INDUSTRIAL SYSTEMS — Ingeniería Termodinámica & Diagnóstico HVAC/R</p>
+            <div class="flex items-center gap-4">
+                <span>Normativa ASHRAE 34 / ISO 5149</span>
+                <span class="text-cyan-400">•</span>
+                <span>Monetización B2B Integrada</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- NOTIFICATION TOAST CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT LOGIC & THERMODYNAMICS ENGINE -->
+    <script>
+        let currentUnitSystem = 'metric';
+        let currentMode = 'SH';
+        let currentVisionImageData = null;
+        let currentVisionDiagnosis = null;
+        let webcamStream = null;
+        let currentRoiData = null;
+        
+        const REFRIGERANTS = {
+            'R134a': {
+                name: 'R-134a',
+                getTsat: (pBar) => {
+                    const pAbs = Math.max(0.2, pBar + 1.013);
+                    return 14.3 * Math.log(pAbs) - 15.2;
+                }
+            },
+            'R410A': {
+                name: 'R-410A',
+                getTsat: (pBar) => {
+                    const pAbs = Math.max(0.5, pBar + 1.013);
+                    return 18.2 * Math.log(pAbs) - 32.5;
+                }
+            },
+            'R32': {
+                name: 'R-32',
+                getTsat: (pBar) => {
+                    const pAbs = Math.max(0.5, pBar + 1.013);
+                    return 18.8 * Math.log(pAbs) - 33.8;
+                }
+            },
+            'R290': {
+                name: 'R-290',
+                getTsat: (pBar) => {
+                    const pAbs = Math.max(0.3, pBar + 1.013);
+                    return 16.9 * Math.log(pAbs) - 25.1;
+                }
+            },
+            'R744': {
+                name: 'R-744 (CO2)',
+                getTsat: (pBar) => {
+                    const pAbs = Math.max(1.0, pBar + 1.013);
+                    return 13.5 * Math.log(pAbs) - 56.2;
+                }
+            }
+        };
+
+        window.onload = function() {
+            calculateThermodynamics();
+            populatePTTable();
+            calcPipeSizing();
+            calculateRoiEsg();
+            updateReportPreview();
+            
+            const today = new Date().toLocaleDateString('es-ES');
+            document.getElementById('rep-out-date').innerText = today;
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-cyan-500/10', 'text-cyan-400', 'border-cyan-500/30');
+                btn.classList.add('text-slate-400', 'border-transparent');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-btn-' + tabId);
+            activeBtn.classList.add('active', 'bg-cyan-500/10', 'text-cyan-400', 'border-cyan-500/30');
+            activeBtn.classList.remove('text-slate-400', 'border-transparent');
+        }
+
+        function setUnitSystem(system) {
+            currentUnitSystem = system;
+            const btnBar = document.getElementById('unit-bar');
+            const btnPsi = document.getElementById('unit-psi');
+
+            if (system === 'metric') {
+                btnBar.className = "px-2.5 py-1 rounded-md text-cyan-400 bg-slate-800 font-bold transition";
+                btnPsi.className = "px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition";
+                document.querySelectorAll('.unit-press-label').forEach(el => el.innerText = 'bar');
+                document.querySelectorAll('.unit-temp-label').forEach(el => el.innerText = '°C');
+            } else {
+                btnPsi.className = "px-2.5 py-1 rounded-md text-cyan-400 bg-slate-800 font-bold transition";
+                btnBar.className = "px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition";
+                document.querySelectorAll('.unit-press-label').forEach(el => el.innerText = 'PSI');
+                document.querySelectorAll('.unit-temp-label').forEach(el => el.innerText = '°F');
+            }
+            calculateThermodynamics();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            const btnSh = document.getElementById('mode-sh');
+            const btnSc = document.getElementById('mode-sc');
+
+            if (mode === 'SH') {
+                btnSh.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-cyan-400 bg-slate-800 transition";
+                btnSc.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition";
+                document.getElementById('out-delta-title').innerText = "SOBRECALENTAMIENTO (SH)";
+            } else {
+                btnSc.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-400 bg-slate-800 transition";
+                btnSh.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition";
+                document.getElementById('out-delta-title').innerText = "SUBENFRIAMIENTO (SC)";
+            }
+            calculateThermodynamics();
+        }
+
+        function syncPressureSlider(val) {
+            document.getElementById('input-pressure').value = val;
+            calculateThermodynamics();
+        }
+
+        function syncTempSlider(val) {
+            document.getElementById('input-temperature').value = val;
+            calculateThermodynamics();
+        }
+
+        function calculateThermodynamics() {
+            const refKey = document.getElementById('refrigerant-select').value;
+            let rawPressure = parseFloat(document.getElementById('input-pressure').value) || 0;
+            let rawTemp = parseFloat(document.getElementById('input-temperature').value) || 0;
+
+            let pBar = currentUnitSystem === 'metric' ? rawPressure : rawPressure * 0.0689476;
+            let tCelsius = currentUnitSystem === 'metric' ? rawTemp : (rawTemp - 32) * 5/9;
+
+            const refObj = REFRIGERANTS[refKey];
+            let tSatCelsius = refObj.getTsat(pBar);
+
+            let deltaVal = currentMode === 'SH' ? (tCelsius - tSatCelsius) : (tSatCelsius - tCelsius);
+
+            let displayTsat = currentUnitSystem === 'metric' ? tSatCelsius : (tSatCelsius * 9/5 + 32);
+            let displayDelta = deltaVal;
+
+            document.getElementById('out-tsat').innerText = displayTsat.toFixed(1);
+            document.getElementById('out-delta-val').innerText = displayDelta.toFixed(1);
+
+            evaluateHealthStatus(deltaVal);
+            updateReportPreview();
+        }
+
+        function evaluateHealthStatus(delta) {
+            const statusTag = document.getElementById('out-delta-status-tag');
+            const gaugeBar = document.getElementById('gauge-bar');
+            const summaryText = document.getElementById('diag-summary-text');
+            const summaryCauses = document.getElementById('diag-summary-causes');
+
+            let widthPct = 50;
+            let statusText = "ÓPTIMO";
+            let colorClass = "emerald";
+
+            if (currentMode === 'SH') {
+                if (delta < 4.0) {
+                    statusText = "MUY BAJO (RIESGO RETORNO LÍQUIDO)";
+                    colorClass = "rose";
+                    widthPct = 15;
+                    summaryText.innerHTML = `Sobrecalentamiento crítico de <strong class="text-rose-400">${delta.toFixed(1)} K</strong>. Riesgo alto de golpe de líquido en compresor.`;
+                    summaryCauses.innerHTML = `<p><strong class="text-slate-300">Causas:</strong> VET bloqueada abierta, evaporador suelto/inundado o sobrecarga de refrigerante.</p>`;
+                    document.getElementById('chk-low-sh').checked = true;
+                    document.getElementById('chk-high-sh').checked = false;
+                } else if (delta >= 4.0 && delta <= 9.0) {
+                    statusText = "RANGO ÓPTIMO";
+                    colorClass = "emerald";
+                    widthPct = 50;
+                    summaryText.innerHTML = `Sobrecalentamiento normal de <strong class="text-emerald-400">${delta.toFixed(1)} K</strong>. El evaporador opera con rendimiento térmico máximo.`;
+                    summaryCauses.innerHTML = `<p class="text-emerald-400"><i class="fa-solid fa-check mr-1"></i> Circuito frigorífico equilibrado.</p>`;
+                    document.getElementById('chk-low-sh').checked = false;
+                    document.getElementById('chk-high-sh').checked = false;
+                } else {
+                    statusText = "ELEVADO (FALTA DE CARGA / OBSTRUCCIÓN)";
+                    colorClass = "amber";
+                    widthPct = 85;
+                    summaryText.innerHTML = `Sobrecalentamiento excesivo de <strong class="text-amber-400">${delta.toFixed(1)} K</strong>. Vapor muy recalentado, refrigerante insuficiente.`;
+                    summaryCauses.innerHTML = `<p><strong class="text-slate-300">Causas:</strong> Fuga de gas, filtro deshidratador obstruido o bulbo VET desajustado.</p>`;
+                    document.getElementById('chk-high-sh').checked = true;
+                    document.getElementById('chk-low-sh').checked = false;
+                }
+            } else {
+                if (delta < 3.0) {
+                    statusText = "BAJO (GAS FLASH EN LÍNEA)";
+                    colorClass = "rose";
+                    widthPct = 20;
+                    summaryText.innerHTML = `Subenfriamiento deficiente <strong class="text-rose-400">${delta.toFixed(1)} K</strong>. Riesgo de burbujas de gas en visor de líquido.`;
+                    summaryCauses.innerHTML = `<p><strong class="text-slate-300">Causas:</strong> Falta de masa de refrigerante o alta temperatura de condensación.</p>`;
+                    document.getElementById('chk-low-sc').checked = true;
+                    document.getElementById('chk-high-sc').checked = false;
+                } else if (delta >= 3.0 && delta <= 8.0) {
+                    statusText = "RANGO ÓPTIMO";
+                    colorClass = "emerald";
+                    widthPct = 50;
+                    summaryText.innerHTML = `Subenfriamiento correcto de <strong class="text-emerald-400">${delta.toFixed(1)} K</strong>. Alimentación de líquido 100% denso a VET.`;
+                    summaryCauses.innerHTML = `<p class="text-emerald-400"><i class="fa-solid fa-check mr-1"></i> Condensador trabajando de forma limpia.</p>`;
+                    document.getElementById('chk-low-sc').checked = false;
+                    document.getElementById('chk-high-sc').checked = false;
+                } else {
+                    statusText = "ALTO (EXCESO DE CARGA)";
+                    colorClass = "amber";
+                    widthPct = 90;
+                    summaryText.innerHTML = `Subenfriamiento muy alto de <strong class="text-amber-400">${delta.toFixed(1)} K</strong>. Líquido acumulado inundando condensador.`;
+                    summaryCauses.innerHTML = `<p><strong class="text-slate-300">Causas:</strong> Sobrecarga de fluido o falta de flujo de aire en condensador.</p>`;
+                    document.getElementById('chk-high-sc').checked = true;
+                    document.getElementById('chk-low-sc').checked = false;
+                }
+            }
+
+            statusTag.innerText = statusText;
+            gaugeBar.style.width = widthPct + '%';
+            
+            if (colorClass === 'emerald') {
+                statusTag.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+                gaugeBar.className = "bg-emerald-400 h-full rounded-full transition-all duration-500";
+            } else if (colorClass === 'amber') {
+                statusTag.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40";
+                gaugeBar.className = "bg-amber-400 h-full rounded-full transition-all duration-500";
+            } else {
+                statusTag.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40";
+                gaugeBar.className = "bg-rose-500 h-full rounded-full transition-all duration-500";
+            }
+
+            evaluateDiagnosticMatrix();
+        }
+
+        function loadSamplePreset(preset) {
+            if (preset === 'normal') {
+                document.getElementById('input-pressure').value = 6.8;
+                document.getElementById('slider-pressure').value = 6.8;
+                document.getElementById('input-temperature').value = 21.0;
+                document.getElementById('slider-temperature').value = 21.0;
+                showToast("Preset Carga Normal Cargado", "success");
+            } else if (preset === 'low_charge') {
+                document.getElementById('input-pressure').value = 3.2;
+                document.getElementById('slider-pressure').value = 3.2;
+                document.getElementById('input-temperature').value = 26.5;
+                document.getElementById('slider-temperature').value = 26.5;
+                showToast("Preset Fuga / Carga Baja Cargado", "warning");
+            } else {
+                document.getElementById('input-pressure').value = 11.5;
+                document.getElementById('slider-pressure').value = 11.5;
+                document.getElementById('input-temperature').value = 18.0;
+                document.getElementById('slider-temperature').value = 18.0;
+                showToast("Preset Sobre-carga Cargado", "danger");
+            }
+            calculateThermodynamics();
+        }
+
+        function transferToDiagnostics() {
+            switchTab('diag-tab');
+            showToast("Datos transferidos a la Matriz Avanzada", "info");
+        }
+
+        function evaluateDiagnosticMatrix() {
+            const lowP = document.getElementById('chk-low-press').checked;
+            const highP = document.getElementById('chk-high-press').checked;
+            const highSH = document.getElementById('chk-high-sh').checked;
+            const lowSH = document.getElementById('chk-low-sh').checked;
+            const lowSC = document.getElementById('chk-low-sc').checked;
+            const highSC = document.getElementById('chk-high-sc').checked;
+
+            const causesList = document.getElementById('diag-causes-list');
+            const actionsList = document.getElementById('diag-actions-list');
+            const sevBadge = document.getElementById('diag-severity-badge');
+            const energyImpact = document.getElementById('diag-energy-impact');
+
+            let causes = [];
+            let actions = [];
+            let severity = "MODERADA";
+            let impactText = "Consumo eléctrico ligeramente incrementado (+10%).";
+
+            if (lowP && highSH && lowSC) {
+                severity = "CRÍTICA (FUGA REFRIGERANTE)";
+                causes.push("Fuga de refrigerante activa o carga inicial insuficiente.");
+                causes.push("Restricción o estrangulamiento en filtro deshidratador.");
+                actions.push("Realizar prueba de estanqueidad con nitrógeno a 25 bar.");
+                actions.push("Recuperar carga restante, sustituir filtro y hacer vacío <500 micrones.");
+                impactText = "Sobrecoste energético grave (+35%): Compresor trabaja continuamente sin enfriar.";
+            } else if (highP && lowSH && highSC) {
+                severity = "ALTA (SOBRECARGA DE GAS)";
+                causes.push("Exceso de refrigerante en el circuito cerrado.");
+                causes.push("Falta de disipación de calor por condensador sucio o ventilador averiado.");
+                actions.push("Recuperar exceso de carga con estación de recuperación.");
+                actions.push("Limpiar aletado de condensador con desengrasante químico HVAC.");
+                impactText = "Peligro mecánico por sobrepresión y consumo de corriente (+25%).";
+            } else if (lowP && lowSH) {
+                severity = "ALTA (EVAPORADOR BLOQUEADO)";
+                causes.push("Falta de flujo de aire en evaporador (Filtros sucios o turbina rota).");
+                causes.push("Escarcha / Hielo acumulado en el serpentín de aspiración.");
+                actions.push("Inspeccionar y lavar filtros de aire y serpentín evaporador.");
+                actions.push("Verificar ciclo de desescarche y resistencias de descongelación.");
+                impactText = "Riesgo inminente de rotura de láminas del compresor por retorno de líquido.";
+            } else if (highSH) {
+                causes.push("Falta moderada de refrigerante o válvula de expansión mal calibrada.");
+                actions.push("Ajustar recalentamiento en tornillo de VET (1/4 vuelta a la izquierda).");
+            } else if (lowSH) {
+                causes.push("Bulbo de válvula de expansión desprendido o sin aislamiento.");
+                actions.push("Fijar bulbo de VET a la tubería a las 10:00 o 02:00 h con abrazadera metálica.");
+            } else {
+                causes.push("Sistema operando dentro de rangos normales de trabajo.");
+                actions.push("Mantener plan de mantenimiento preventivo trimestral.");
+                severity = "NORMAL";
+                impactText = "Eficiencia energética óptima en punto de diseño (COP nominal).";
+            }
+
+            causesList.innerHTML = causes.map(c => `
+                <li class="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                    <i class="fa-solid fa-circle-dot text-cyan-400 mt-1"></i>
+                    <span>${c}</span>
+                </li>
+            `).join('');
+
+            actionsList.innerHTML = actions.map(a => `
+                <li class="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                    <i class="fa-solid fa-wrench text-emerald-400 mt-1"></i>
+                    <span>${a}</span>
+                </li>
+            `).join('');
+
+            sevBadge.innerText = severity;
+            energyImpact.innerText = impactText;
+
+            if (severity.includes('CRÍTICA')) {
+                sevBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40";
+            } else if (severity.includes('ALTA')) {
+                sevBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40";
+            } else {
+                sevBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+            }
+
+            updateReportPreview();
+        }
+
+        function resetDiagnosticMatrix() {
+            document.querySelectorAll('#diag-tab input[type="checkbox"]').forEach(c => c.checked = false);
+            evaluateDiagnosticMatrix();
+            showToast("Matriz de Diagnóstico reiniciada", "info");
+        }
+
+        function saveDiagToReport() {
+            switchTab('report-tab');
+            showToast("Diagnóstico guardado e integrado en el informe", "success");
+        }
+
+        // ================= MÓDULO AUDITORÍA ROI & ESG =================
+        function calculateRoiEsg() {
+            const powerKw = parseFloat(document.getElementById('esg-power-kw')?.value) || 0;
+            const hoursYear = parseFloat(document.getElementById('esg-hours-year')?.value) || 0;
+            const kwhCost = parseFloat(document.getElementById('esg-kwh-cost')?.value) || 0;
+            const effGainPct = parseFloat(document.getElementById('esg-efficiency-gain')?.value) || 0;
+            const invCost = parseFloat(document.getElementById('esg-investment-cost')?.value) || 0;
+            const co2Factor = parseFloat(document.getElementById('esg-co2-factor')?.value) || 0;
+
+            const annualKwhCurrent = powerKw * hoursYear;
+            const annualCostCurrent = annualKwhCurrent * kwhCost;
+
+            const annualKwhOptimized = annualKwhCurrent * (1 - (effGainPct / 100));
+            const annualSavings = annualCostCurrent - (annualKwhOptimized * kwhCost);
+
+            let paybackMonths = annualSavings > 0 ? (invCost / annualSavings) * 12 : 0;
+            const co2SavedTon = ((annualKwhCurrent - annualKwhOptimized) * co2Factor) / 1000;
+            const roi5Years = invCost > 0 ? ((annualSavings * 5 - invCost) / invCost) * 100 : 0;
+
+            currentRoiData = {
+                savings: annualSavings.toFixed(2),
+                payback: paybackMonths < 12 ? paybackMonths.toFixed(1) + ' Meses' : (paybackMonths / 12).toFixed(1) + ' Años',
+                co2: co2SavedTon.toFixed(2),
+                roi: roi5Years.toFixed(0) + '%',
+                text: `La optimización de eficiencia del ${effGainPct}% genera un ahorro económico anual de ${annualSavings.toFixed(2)} €, evitando la emisión de ${co2SavedTon.toFixed(2)} toneladas de CO₂ al año y amortizando la inversión en ${paybackMonths < 12 ? paybackMonths.toFixed(1) + ' meses' : (paybackMonths / 12).toFixed(1) + ' años'}.`
+            };
+
+            if (document.getElementById('out-esg-savings')) {
+                document.getElementById('out-esg-savings').innerText = '€ ' + Math.round(annualSavings).toLocaleString('es-ES');
+                document.getElementById('out-esg-payback').innerText = currentRoiData.payback;
+                document.getElementById('out-esg-co2').innerText = co2SavedTon.toFixed(2) + ' Ton';
+                document.getElementById('out-esg-roi').innerText = roi5Years.toFixed(0) + '%';
+                document.getElementById('out-esg-summary-text').innerText = currentRoiData.text;
+            }
+        }
+
+        function transferRoiToReport() {
+            if (!currentRoiData) calculateRoiEsg();
+            document.getElementById('rep-roi-section').classList.remove('hidden');
+            document.getElementById('rep-roi-savings').innerText = '€ ' + Number(currentRoiData.savings).toLocaleString('es-ES');
+            document.getElementById('rep-roi-payback').innerText = currentRoiData.payback;
+            document.getElementById('rep-roi-co2').innerText = currentRoiData.co2 + ' Ton';
+            document.getElementById('rep-roi-rate').innerText = currentRoiData.roi;
+            document.getElementById('rep-roi-text').innerText = currentRoiData.text;
+
+            switchTab('report-tab');
+            showToast("Auditoría ROI & ESG incorporada al informe oficial", "success");
+        }
+
+        // ================= VISION AI MODULE LOGIC =================
+        function handleVisionImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                setVisionImagePreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setVisionImagePreview(dataUrl) {
+            currentVisionImageData = dataUrl;
+            document.getElementById('vision-placeholder').classList.add('hidden');
+            document.getElementById('vision-preview-wrapper').classList.remove('hidden');
+            document.getElementById('vision-preview-img').src = dataUrl;
+            document.getElementById('vision-analyze-btn').disabled = false;
+            document.getElementById('vision-status-badge').innerText = "FOTO LISTA PARA ESCANEO";
+            document.getElementById('vision-status-badge').className = "px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40";
+            showToast("Imagen capturada correctamente", "success");
+        }
+
+        async function openLiveWebcam() {
+            try {
+                webcamStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                const video = document.getElementById('webcam-video');
+                video.srcObject = webcamStream;
+                document.getElementById('webcam-live-box').classList.remove('hidden');
+            } catch (err) {
+                showToast("No se pudo acceder a la webcam directa. Usa 'Cámara / Archivo'.", "warning");
+            }
+        }
+
+        function captureFromWebcam() {
+            const video = document.getElementById('webcam-video');
+            const canvas = document.getElementById('webcam-canvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            setVisionImagePreview(canvas.toDataURL('image/jpeg', 0.9));
+            stopLiveWebcam();
+        }
+
+        function stopLiveWebcam() {
+            if (webcamStream) {
+                webcamStream.getTracks().forEach(track => track.stop());
+                webcamStream = null;
+            }
+            document.getElementById('webcam-live-box').classList.add('hidden');
+        }
+
+        function runVisionAIDiagnosis() {
+            if (!currentVisionImageData) return;
+            const comp = document.getElementById('vision-component-type').value;
+            const badge = document.getElementById('vision-status-badge');
+            const headline = document.getElementById('vision-diagnosis-headline');
+            const details = document.getElementById('vision-diagnosis-details');
+
+            badge.innerText = "ANALIZANDO IMAGEN...";
+            badge.className = "px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40";
+            headline.innerText = "Escaneando patrones térmicos, manchas de aceite y anomalías mecánicas...";
+
+            const findings = {
+                evaporator: {
+                    title: "Anomalía Detectada en Batería Evaporadora: Formación Irregular de Escarcha / Obstrucción",
+                    desc: "La distribución visual indica hielo concentrado en los primeros pasos del distribuidor o suciedad en aletas. Causa probable: Falta de flujo de aire (ventilador/filtros) o falta de carga de refrigerante con evaporación por debajo de 0 °C. Acción: Desescarche completo, limpieza de turbina y comprobación de sobrecalentamiento (SH)."
+                },
+                condenser: {
+                    title: "Anomalía Detectada en Condensador: Colmatación de Aletas / Restricción Térmica",
+                    desc: "Se aprecia acumulación superficial en el intercambio aire-refrigerante que eleva la temperatura de condensación y el consumo del compresor. Acción: Limpieza química con desengrasante alcalino neutro, peinado de aletas y verificación de salto térmico."
+                },
+                compressor: {
+                    title: "Anomalía Detectada en Compresor / Bornes: Recalentamiento Localizado o Rezume de Aceite",
+                    desc: "Se observan indicios de estrés térmico en terminales o humedad de aceite en zona de junta/válvula de servicio. Acción: Medir aislamiento de devanados con megóhmetro, reapretar conexiones eléctricas y verificar retorno de aceite."
+                },
+                piping: {
+                    title: "Anomalía Detectada en Tubería / VET: Trazas de Aceite Compatibles con Microfuga",
+                    desc: "La presencia de película brillante/oscura en unión roscada o soldadura sugiere pérdida lenta de refrigerante y aceite POE/mineral. Acción: Presurizar circuito con nitrógeno seco, aplicar detector de fugas y rehacer abocardado o soldadura."
+                },
+                display: {
+                    title: "Lectura de Controlador / Placa: Alarma de Protección del Circuito Frigorífico",
+                    desc: "El estado del controlador señala bloqueo preventivo por presostato o sonda NTC fuera de rango. Acción: Comprobar continuidad de sondas (kΩ según tabla fabricante) y rearme tras verificar presiones de alta y baja."
+                }
+            };
+
+            setTimeout(() => {
+                const res = findings[comp] || findings.evaporator;
+                currentVisionDiagnosis = res;
+                badge.innerText = "FALLO IDENTIFICADO";
+                badge.className = "px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+                headline.innerHTML = `<span class="text-cyan-400"><i class="fa-solid fa-circle-check mr-1"></i> ${res.title}</span>`;
+                details.innerHTML = `<p class="text-slate-200">${res.desc}</p>`;
+                document.getElementById('vision-attach-btn').disabled = false;
+                showToast("Análisis visual IA completado", "success");
+            }, 1200);
+        }
+
+        function attachVisionToReport() {
+            if (!currentVisionImageData || !currentVisionDiagnosis) return;
+            document.getElementById('rep-vision-section').classList.remove('hidden');
+            document.getElementById('rep-vision-img').src = currentVisionImageData;
+            document.getElementById('rep-vision-title').innerText = currentVisionDiagnosis.title;
+            document.getElementById('rep-vision-desc').innerText = currentVisionDiagnosis.desc;
+            switchTab('report-tab');
+            showToast("Foto y diagnóstico IA adjuntados al informe oficial", "success");
+        }
+
+        function populatePTTable() {
+            const tbody = document.getElementById('pt-table-body');
+            let html = '';
+
+            for (let t = -15; t <= 45; t += 3) {
+                let p134_val = Math.exp((t + 15.2) / 14.3) - 1.013;
+                let p410_val = Math.exp((t + 32.5) / 18.2) - 1.013;
+                let p32_val  = Math.exp((t + 33.8) / 18.8) - 1.013;
+                let p290_val = Math.exp((t + 25.1) / 16.9) - 1.013;
+
+                html += `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3 font-bold text-cyan-400">${t > 0 ? '+' + t : t} °C</td>
+                        <td class="p-3">${Math.max(0, p134_val).toFixed(2)}</td>
+                        <td class="p-3">${Math.max(0, p410_val).toFixed(2)}</td>
+                        <td class="p-3">${Math.max(0, p32_val).toFixed(2)}</td>
+                        <td class="p-3">${Math.max(0, p290_val).toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+            tbody.innerHTML = html;
+        }
+
+        function filterPTTable() {
+            let input = document.getElementById('pt-search').value.toLowerCase();
+            let rows = document.querySelectorAll('#pt-table-body tr');
+            rows.forEach(row => {
+                let text = row.innerText.toLowerCase();
+                row.style.display = text.includes(input) ? '' : 'none';
+            });
+        }
+
+        function calcPipeSizing() {
+            const kw = parseFloat(document.getElementById('pipe-kw').value) || 5.0;
+            const lineType = document.getElementById('pipe-line-type').value;
+
+            let size = '1/2" (12.7 mm)';
+            let vel = '7.5 m/s';
+            let dp = '0.12 bar';
+
+            if (lineType === 'suction') {
+                if (kw < 3) size = '3/8" (9.52 mm)';
+                else if (kw < 8) size = '5/8" (15.87 mm)';
+                else if (kw < 15) size = '7/8" (22.22 mm)';
+                else size = '1-1/8" (28.58 mm)';
+
+                vel = (6.5 + kw * 0.2).toFixed(1) + ' m/s (Retorno Aceite Correcto)';
+                dp = (0.08 + kw * 0.005).toFixed(2) + ' bar';
+            } else if (lineType === 'liquid') {
+                if (kw < 5) size = '1/4" (6.35 mm)';
+                else if (kw < 12) size = '3/8" (9.52 mm)';
+                else size = '1/2" (12.7 mm)';
+
+                vel = '0.8 m/s (Sin cavitación)';
+                dp = '0.04 bar';
+            } else {
+                size = '1/2" (12.7 mm)';
+                vel = '11.2 m/s';
+                dp = '0.15 bar';
+            }
+
+            document.getElementById('out-pipe-size').innerText = size;
+            document.getElementById('out-pipe-vel').innerText = vel;
+            document.getElementById('out-pipe-dp').innerText = dp;
+        }
+
+        function updateReportPreview() {
+            const client = document.getElementById('rep-client').value;
+            const location = document.getElementById('rep-location').value;
+            const tech = document.getElementById('rep-tech').value;
+            const equip = document.getElementById('rep-equip').value;
+            const notes = document.getElementById('rep-notes').value;
+
+            document.getElementById('rep-out-client').innerText = client || '-';
+            document.getElementById('rep-out-location').innerText = location || '-';
+            document.getElementById('rep-out-tech').innerText = tech || '-';
+            document.getElementById('rep-out-equip').innerText = equip || '-';
+            document.getElementById('rep-out-notes').innerText = notes || '-';
+
+            const refKey = document.getElementById('refrigerant-select').value;
+            const press = document.getElementById('input-pressure').value;
+            const temp = document.getElementById('input-temperature').value;
+            const tsat = document.getElementById('out-tsat').innerText;
+            const delta = document.getElementById('out-delta-val').innerText;
+            const statusTag = document.getElementById('out-delta-status-tag').innerText;
+
+            document.getElementById('rep-row-ref').innerText = REFRIGERANTS[refKey].name;
+            document.getElementById('rep-row-press').innerText = press + ' ' + (currentUnitSystem === 'metric' ? 'bar' : 'PSI');
+            document.getElementById('rep-row-temp').innerText = temp + ' ' + (currentUnitSystem === 'metric' ? '°C' : '°F');
+            document.getElementById('rep-row-tsat').innerText = tsat + ' ' + (currentUnitSystem === 'metric' ? '°C' : '°F');
+            document.getElementById('rep-row-delta').innerText = delta + ' K (' + currentMode + ')';
+            document.getElementById('rep-row-status').innerText = statusTag;
+
+            const diagSummary = document.getElementById('diag-summary-text').innerText;
+            const diagCauses = document.getElementById('diag-summary-causes').innerText;
+            document.getElementById('rep-out-diag-summary').innerText = diagSummary;
+            document.getElementById('rep-out-diag-details').innerText = diagCauses;
+        }
+
+        function quickAddReport() {
+            updateReportPreview();
+            showToast("Lectura añadida al informe técnico", "success");
+        }
+
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-slate-900 border-cyan-500/50 text-cyan-300";
+            let icon = "fa-circle-info text-cyan-400";
+
+            if (type === 'success') {
+                bgClass = "bg-slate-900 border-emerald-500/50 text-emerald-300";
+                icon = "fa-circle-check text-emerald-400";
+            } else if (type === 'warning') {
+                bgClass = "bg-slate-900 border-amber-500/50 text-amber-300";
+                icon = "fa-triangle-exclamation text-amber-400";
+            } else if (type === 'danger') {
+                bgClass = "bg-slate-900 border-rose-500/50 text-rose-300";
+                icon = "fa-circle-xmark text-rose-400";
+            }
+
+            toast.className = `glass-panel p-3.5 rounded-xl border text-xs font-semibold flex items-center gap-2.5 shadow-2xl transition-all duration-300 transform translate-y-2 pointer-events-auto ${bgClass}`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${msg}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function calcEngLoads() {
+            const vol = parseFloat(document.getElementById('eng-load-vol')?.value) || 0;
+            const dt = parseFloat(document.getElementById('eng-load-dt')?.value) || 0;
+            const factor = parseFloat(document.getElementById('eng-load-type')?.value) || 32;
+            const extra = parseFloat(document.getElementById('eng-load-extra')?.value) || 0;
+
+            const structuralKw = (vol * dt * (factor / 25)) / 1000;
+            const totalKw = (structuralKw + extra) * 1.10;
+            const frigories = Math.round(totalKw * 860);
+            const airFlow = Math.round(totalKw * 180);
+
+            if (document.getElementById('out-eng-kw')) {
+                document.getElementById('out-eng-kw').textContent = totalKw.toFixed(2) + ' kW';
+                document.getElementById('out-eng-frig').textContent = frigories.toLocaleString('es-ES');
+                document.getElementById('out-eng-air').textContent = airFlow.toLocaleString('es-ES') + ' m³/h';
+            }
+        }
+
+        function calcEngHydraulics() {
+            const flowM3h = parseFloat(document.getElementById('eng-hyd-flow')?.value) || 0;
+            const diamMm = parseFloat(document.getElementById('eng-hyd-diam')?.value) || 1;
+            const viscFactor = parseFloat(document.getElementById('eng-hyd-fluid')?.value) || 1.0;
+            const lengthM = parseFloat(document.getElementById('eng-hyd-len')?.value) || 0;
+
+            const flowM3s = flowM3h / 3600;
+            const diamM = diamMm / 1000;
+            const area = Math.PI * Math.pow(diamM / 2, 2);
+            const velocity = area > 0 ? (flowM3s / area) : 0;
+
+            const frictionFactor = 0.022 * viscFactor;
+            const rho = 1000;
+            const paPerMeter = diamM > 0 ? (frictionFactor * (1 / diamM) * (rho * Math.pow(velocity, 2) / 2)) : 0;
+            const totalBar = (paPerMeter * lengthM) / 100000;
+
+            if (document.getElementById('out-hyd-vel')) {
+                document.getElementById('out-hyd-vel').textContent = velocity.toFixed(2) + ' m/s';
+                document.getElementById('out-hyd-pam').textContent = Math.round(paPerMeter) + ' Pa/m';
+                document.getElementById('out-hyd-bar').textContent = totalBar.toFixed(2) + ' bar';
+
+                const statusEl = document.getElementById('out-hyd-status');
+                if (velocity > 2.2) {
+                    statusEl.textContent = 'Alerta: Velocidad alta (riesgo de ruido y erosión).';
+                    statusEl.className = 'text-[11px] text-rose-400 font-medium pt-0.5';
+                } else if (velocity < 0.5 && velocity > 0) {
+                    statusEl.textContent = 'Aviso: Velocidad baja (posible acumulación de aire).';
+                    statusEl.className = 'text-[11px] text-amber-400 font-medium pt-0.5';
+                } else {
+                    statusEl.textContent = 'Velocidad dentro de rango óptimo (0.8 - 2.0 m/s).';
+                    statusEl.className = 'text-[11px] text-emerald-400 font-medium pt-0.5';
+                }
+            }
+        }
+
+        function calcEngPsychrometrics() {
+            const T = parseFloat(document.getElementById('eng-psy-temp')?.value) || 0;
+            const RH = Math.min(100, Math.max(1, parseFloat(document.getElementById('eng-psy-rh')?.value) || 50));
+            const alt = parseFloat(document.getElementById('eng-psy-alt')?.value) || 0;
+
+            const Patm = 101.325 * Math.pow((1 - 2.25577e-5 * alt), 5.25588);
+            const Pws = 0.61078 * Math.exp((17.27 * T) / (T + 237.3));
+            const Pw = Pws * (RH / 100);
+
+            const alpha = Math.log(Pw / 0.61078);
+            const dewPoint = (237.3 * alpha) / (17.27 - alpha);
+
+            const W_kg = 0.62198 * (Pw / (Patm - Pw));
+            const W_g = W_kg * 1000;
+            const enthalpy = (1.006 * T) + W_kg * (2501 + 1.86 * T);
+
+            if (document.getElementById('out-psy-dew')) {
+                document.getElementById('out-psy-dew').textContent = dewPoint.toFixed(1) + ' °C';
+                document.getElementById('out-psy-abs').textContent = W_g.toFixed(1) + ' g/kg';
+                document.getElementById('out-psy-ent').textContent = enthalpy.toFixed(1) + ' kJ/kg';
+            }
+        }
+
+        calcEngLoads();
+        calcEngHydraulics();
+        calcEngPsychrometrics();
+    </script>
+    
+    <footer style="margin-top: 40px; padding: 25px 15px; background-color: #141414; color: #999; text-align: center; font-size: 13px; border-top: 1px solid #2a2a2a; font-family: sans-serif;">
+      <p style="margin: 0 0 12px 0;">© 2026 <strong>CLIMARX</strong> · Desarrollado por Ander Fernández Rodríguez</p>
+      
+      <div style="margin-bottom: 15px;">
+        <a href="#legal" onclick="var el = document.getElementById('info-legal-box'); el.style.display = (el.style.display === 'none') ? 'block' : 'none'; return false;" style="color: #4da6ff; margin: 0 12px; text-decoration: none; font-weight: bold;">Aviso Legal, Privacidad y Contacto</a>
+      </div>
+
+      <div id="info-legal-box" style="display: none; max-width: 700px; margin: 15px auto 0 auto; padding: 15px; background-color: #1f1f1f; border: 1px solid #333; border-radius: 6px; text-align: left; color: #ccc; line-height: 1.5; font-size: 12px;">
+        <p style="margin: 0 0 8px 0;"><strong>Aviso Legal:</strong> CLIMARX es una herramienta de apoyo técnico orientativa. Los cálculos de recalentamiento/subenfriamiento (SH/SC), tablas PT, dimensionamiento de tuberías y diagnósticos asistidos son meramente informativos; la responsabilidad técnica y de seguridad en la instalación recae exclusivamente sobre el profesional cualificado.</p>
+        <p style="margin: 0 0 8px 0;"><strong>Política de Privacidad:</strong> Esta aplicación no solicita registro ni almacena datos personales, cálculos ni imágenes procesadas en bases de datos o servidores propios.</p>
+        <p style="margin: 0;"><strong>Contacto:</strong> Para consultas técnicas o profesionales, escribe a <a href="mailto:andrf6940@gmail.com" style="color: #4da6ff;">andrf6940@gmail.com</a>.</p>
+      </div>
+    </footer>
+    
+    <div style="background: linear-gradient(90deg, #0284c7, #0369a1); color: #ffffff; text-align: center; padding: 8px 12px; font-size: 13px; font-family: system-ui, -apple-system, sans-serif; letter-spacing: 0.3px;">
+        🚀 <strong>ACCESO GRATUITO DE LANZAMIENTO:</strong> Disfruta de todas las herramientas PRO sin coste durante los primeros 2 meses.
+    </div>
+</body>
+</html>
